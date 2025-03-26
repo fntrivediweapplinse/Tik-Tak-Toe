@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Tic Tac Toe</h2>
+            <div>
+                <span class="me-3">Playing as: {{ player_name }}</span>
+                <a href="{% url 'new_game' %}" class="btn btn-primary">Create New Room</a>
+            </div>
+        </div>
+
+        <h3 class="mb-3">Available Rooms</h3>
+        {% if available_rooms %}
+            <div class="list-group mb-4">
+                {% for game in available_rooms %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-1">Room: {{ game.room_name }}</h5>
+                                <small>Created by {{ game.player1_name }} {{ game.created_at|timesince }} ago</small>
+                            </div>
+                            <a href="{% url 'join_game' game.id %}" class="btn btn-success">Join Game</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info mb-4">
+                No rooms available. Create one to start playing!
+            </div>
+        {% endif %}
+
+        <h3 class="mb-3">Your Active Games</h3>
+        {% if my_games %}
+            <div class="list-group">
+                {% for game in my_games %}
+                    <a href="{% url 'game_detail' game.id %}" class="list-group-item list-group-item-action">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-1">Room: {{ game.room_name }}</h5>
+                                {% if game.player2_name %}
+                                    <small>
+                                        {% if player_name == game.player2_name %}
+                                            Playing against {{ game.player1_name }}
+                                        {% else %}
+                                            Playing against {{ game.player2_name }}
+                                        {% endif %}
+                                    </small>
+                                {% else %}
+                                    <small class="text-muted">Waiting for opponent...</small>
+                                {% endif %}
+                            </div>
+                            {% if game.player2_name %}
+                                <span class="badge bg-{% if game.current_turn == player_name %}primary{% else %}secondary{% endif %}">
+                                    {% if game.current_turn == player_name %}Your Turn{% else %}Opponent's Turn{% endif %}
+                                </span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark">Waiting</span>
+                            {% endif %}
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                You have no active games.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

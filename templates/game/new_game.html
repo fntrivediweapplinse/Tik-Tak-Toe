@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center">Create New Game Room</h3>
+            </div>
+            <div class="card-body">
+                {% if error %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endif %}
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="room_name" class="form-label">Room Name</label>
+                        <input type="text" name="room_name" class="form-control" required 
+                               placeholder="Enter a unique room name" pattern="[A-Za-z0-9\-_]{3,50}"
+                               title="Room name can contain letters, numbers, hyphens, and underscores (3-50 characters)">
+                        <div class="form-text">Choose a unique name for your game room</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Create Room</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
